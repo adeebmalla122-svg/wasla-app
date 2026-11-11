@@ -3,238 +3,330 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#6541a5">
-<meta name="description" content="وصلة - منصة الخدمات والمهن في سوريا">
-<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#6c3ce9">
+<meta name="description" content="وصلة - دليلك للخدمات والمهن في سوريا">
 <title>وصلة | خدمات سوريا</title>
+
+<link rel="manifest" href="./manifest.json">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 *{box-sizing:border-box}
-body{
- margin:0;
- font-family:Arial,sans-serif;
- background:#f7f5fb;
- color:#292333;
-}
-header{
- background:linear-gradient(135deg,#493078,#8056bd);
- color:white;
- padding:28px 20px 35px;
- border-radius:0 0 28px 28px;
-}
-.logo{font-size:30px;font-weight:bold}
-.tagline{font-size:14px;margin-top:7px}
-.search{
- margin-top:24px;
- display:flex;
- background:white;
- border-radius:13px;
- padding:5px;
-}
-.search input{
- flex:1;
- border:0;
- outline:0;
- padding:12px;
- font-size:15px;
- min-width:0;
-}
-.search button{
- border:0;
- background:#f0c85a;
- border-radius:10px;
- padding:10px 17px;
- font-weight:bold;
-}
-.container{padding:20px}
-h3{margin:12px 0 15px}
-.cities{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:12px;
-}
-.city{
- background:white;
- border:2px solid transparent;
- border-radius:15px;
- padding:17px;
- text-align:center;
- font-size:17px;
- font-weight:bold;
- cursor:pointer;
- box-shadow:0 3px 12px #ddd5e8;
-}
-.city.active{border-color:#7950b2;color:#68429d}
-.categories{
- display:grid;
- grid-template-columns:repeat(3,1fr);
- gap:11px;
-}
-.category{
- background:white;
- padding:17px 5px;
- text-align:center;
- border-radius:14px;
- cursor:pointer;
- box-shadow:0 3px 10px #e8e3ef;
- font-size:14px;
-}
-.category span{display:block;font-size:25px;margin-bottom:8px}
-.category.active{background:#eee5fa;border:1px solid #8056bd}
-.card{
- background:white;
- border-radius:16px;
- padding:16px;
- margin-bottom:12px;
- box-shadow:0 3px 12px #e7e1ed;
-}
-.card h4{margin:0 0 9px;font-size:17px}
-.card p{color:#777;margin:6px 0;font-size:14px}
-.badge{color:#69429f;font-size:13px}
-.contact{
- display:inline-block;
- margin-top:10px;
- background:#69429f;
- color:white;
- padding:10px 18px;
- border-radius:10px;
- text-decoration:none;
-}
-.bottom{
- position:sticky;
- bottom:0;
- background:white;
- display:flex;
- justify-content:space-around;
- padding:13px 5px;
- box-shadow:0 -3px 12px #ddd;
-}
-.bottom button{
- border:0;
- background:none;
- color:#69429f;
- font-size:13px;
- cursor:pointer;
-}
-.empty{text-align:center;color:#888;padding:25px}
+body{margin:0;background:#f6f4fb;font-family:Arial,sans-serif;color:#25213a}
+header{background:linear-gradient(135deg,#7548ed,#5125bd);color:white;padding:27px 20px 35px;border-radius:0 0 25px 25px}
+header h1{margin:0;font-size:30px}
+header p{margin:9px 0 0;opacity:.9}
+main{max-width:650px;margin:auto;padding:18px}
+.box{background:white;padding:18px;border-radius:17px;margin-bottom:15px;box-shadow:0 3px 15px #00000009}
+input,select,textarea,button{width:100%;padding:13px;margin:6px 0;border:1px solid #ddd;border-radius:10px;font-size:15px}
+button{background:#6939d5;color:white;border:0;font-weight:bold;cursor:pointer}
+button.secondary{background:#eee;color:#49328b}
+.card{padding:15px;border:1px solid #eee;border-radius:13px;margin:10px 0}
+.card h3{margin:0 0 8px}
+.tag{display:inline-block;background:#f0eaff;color:#6135c4;padding:6px 10px;border-radius:20px;font-size:12px;margin:4px}
+.small{color:#777;font-size:13px}
+h2{font-size:19px;margin-top:0}
+.hidden{display:none}
+#status{padding:10px;border-radius:9px;background:#f0eaff;color:#5125bd;margin:10px 0}
 </style>
 </head>
 
 <body>
 
 <header>
- <div class="logo">💜 وصلة</div>
- <div class="tagline">كل الخدمات والمهن... أقرب إليك</div>
-
- <div class="search">
-  <input id="searchInput" placeholder="شو الخدمة اللي عم تدور عليها؟">
-  <button onclick="render()">بحث</button>
- </div>
+<h1>وصلة 💜</h1>
+<p>دليلك للخدمات والمهن في سوريا</p>
+<p>حماة | حمص</p>
 </header>
 
-<main class="container">
+<main>
 
- <h3>📍 اختر مدينتك</h3>
- <div class="cities">
-  <div class="city active" onclick="chooseCity('حماة',this)">🏙️ حماة</div>
-  <div class="city" onclick="chooseCity('حمص',this)">🏙️ حمص</div>
- </div>
+<div class="box">
+<h2>ابحث عن خدمة</h2>
+<input id="search" placeholder="ابحث عن كهربائي، سباك، نجار...">
+<select id="cityFilter">
+<option value="">كل المدن</option>
+</select>
+<select id="categoryFilter">
+<option value="">كل التصنيفات</option>
+</select>
+</div>
 
- <h3>🔎 تصفح الخدمات</h3>
- <div class="categories" id="categories"></div>
+<div class="box">
+<h2>الخدمات المتاحة</h2>
+<div id="status">جارٍ تحميل الخدمات...</div>
+<div id="services"></div>
+</div>
 
- <h3>⭐ مقدمو الخدمات</h3>
- <div id="results"></div>
+<div class="box">
+<h2>حسابك</h2>
+<div id="accountStatus" class="small">لم تسجل الدخول بعد.</div>
+
+<div id="authArea">
+<input id="email" type="email" placeholder="البريد الإلكتروني">
+<input id="password" type="password" placeholder="كلمة المرور">
+<button onclick="signUp()">إنشاء حساب جديد</button>
+<button class="secondary" onclick="signIn()">تسجيل الدخول</button>
+</div>
+
+<button id="logout" class="secondary hidden" onclick="signOut()">تسجيل الخروج</button>
+</div>
+
+<div class="box">
+<h2>أضف إعلانك</h2>
+<p class="small">سجّل الدخول أولاً حتى تتمكن من نشر خدمتك.</p>
+
+<div id="adArea" class="hidden">
+<input id="businessName" placeholder="اسم النشاط أو مقدم الخدمة">
+<textarea id="description" placeholder="اشرح الخدمة التي تقدمها"></textarea>
+
+<select id="adCity">
+<option value="">اختر المدينة</option>
+</select>
+
+<select id="adCategory">
+<option value="">اختر التصنيف</option>
+</select>
+
+<input id="phone" type="tel" placeholder="رقم الهاتف">
+<input id="address" placeholder="العنوان (اختياري)">
+
+<button onclick="addProvider()">نشر الإعلان</button>
+</div>
+</div>
 
 </main>
 
-<nav class="bottom">
- <button onclick="window.scrollTo(0,0)">🏠 الرئيسية</button>
- <button onclick="alert('قريباً: تسجيل الحساب وإضافة إعلان')">➕ أضف إعلانك</button>
- <button onclick="alert('قريباً: حسابك الشخصي')">👤 حسابي</button>
-</nav>
-
 <script>
-let city='حماة';
-let category='الكل';
+const SUPABASE_URL = "https://dekdhjuqsnhhljozfcgw.supabase.co";
+const SUPABASE_KEY = "sb_publishable_THw1n9QjkgURD8K68TQZhQ_6zxCkc3";
 
-const services=[
- ['🔌','كهرباء','حماة'],
- ['🚰','سباكة','حماة'],
- ['🪚','نجارة','حماة'],
- ['🔨','حدادة','حمص'],
- ['🪟','ألمنيوم','حمص'],
- ['🏠','صيانة منازل','حمص'],
- ['🚗','نقل وتوصيل','حماة'],
- ['📚','دروس خصوصية','حمص'],
- ['🧹','تنظيف','حماة']
-];
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
-function drawCategories(){
- const box=document.getElementById('categories');
- box.innerHTML='';
- [['الكل','🌟'],...services.map(s=>[s[1],s[0]])]
- .forEach(item=>{
-  const el=document.createElement('div');
-  el.className='category'+(category===item[0]?' active':'');
-  el.innerHTML='<span>'+item[1]+'</span>'+item[0];
-  el.onclick=()=>{
-   category=item[0];
-   drawCategories();
-   render();
-  };
-  box.appendChild(el);
- });
+let cities = [];
+let categories = [];
+let providers = [];
+
+const statusBox = document.getElementById("status");
+
+async function loadOptions(){
+  const [cityResult,categoryResult] = await Promise.all([
+    db.from("cities").select("id,name").order("name"),
+    db.from("categories").select("id,name").order("name")
+  ]);
+
+  if(cityResult.error || categoryResult.error){
+    statusBox.textContent = "تعذر تحميل المدن والتصنيفات.";
+    return;
+  }
+
+  cities = cityResult.data || [];
+  categories = categoryResult.data || [];
+
+  fillSelect("cityFilter",cities,"كل المدن");
+  fillSelect("adCity",cities,"اختر المدينة");
+  fillSelect("categoryFilter",categories,"كل التصنيفات");
+  fillSelect("adCategory",categories,"اختر التصنيف");
 }
 
-function chooseCity(name,el){
- city=name;
- document.querySelectorAll('.city').forEach(x=>x.classList.remove('active'));
- el.classList.add('active');
- render();
+function fillSelect(id,items,placeholder){
+  const select = document.getElementById(id);
+  select.innerHTML = `<option value="">${placeholder}</option>`;
+
+  items.forEach(item=>{
+    const option = document.createElement("option");
+    option.value = item.id;
+    option.textContent = item.name;
+    select.appendChild(option);
+  });
 }
 
-function render(){
- const term=document.getElementById('searchInput').value.trim();
- const box=document.getElementById('results');
- const filtered=services.filter(s=>
-  s[2]===city &&
-  (category==='الكل'||s[1]===category) &&
-  (!term||s[1].includes(term))
- );
+async function loadServices(){
+  statusBox.textContent = "جارٍ تحميل الخدمات...";
 
- box.innerHTML='';
- if(!filtered.length){
-  box.innerHTML='<div class="empty">ما لقينا خدمات مطابقة حالياً.</div>';
-  return;
- }
+  const {data,error} = await db
+    .from("public_providers")
+    .select("*")
+    .order("created_at",{ascending:false});
 
- filtered.forEach(s=>{
-  const card=document.createElement('div');
-  card.className='card';
-  const title=document.createElement('h4');
-  title.textContent=s[0]+' '+s[1];
-  const desc=document.createElement('p');
-  desc.textContent='خدمة متاحة في '+s[2];
-  const badge=document.createElement('div');
-  badge.className='badge';
-  badge.textContent='إعلان تجريبي';
-  card.append(title,desc,badge);
-  box.appendChild(card);
- });
+  if(error){
+    statusBox.textContent = "حدث خطأ أثناء تحميل الخدمات: " + error.message;
+    return;
+  }
+
+  providers = data || [];
+  renderServices();
 }
 
-drawCategories();
-render();
-</script>
+function renderServices(){
+  const container = document.getElementById("services");
+  container.innerHTML = "";
 
-<script>
-if ("serviceWorker" in navigator) {
- window.addEventListener("load", () => {
-  navigator.serviceWorker.register("./sw.js")
-   .then(() => console.log("وصلة جاهزة للعمل"))
-   .catch(error => console.log("خطأ في التسجيل:", error));
- });
+  const term = document.getElementById("search").value.trim().toLowerCase();
+  const city = document.getElementById("cityFilter").value;
+  const category = document.getElementById("categoryFilter").value;
+
+  const filtered = providers.filter(p=>{
+    const matchesText =
+      (p.business_name || "").toLowerCase().includes(term) ||
+      (p.description || "").toLowerCase().includes(term);
+
+    return matchesText &&
+      (!city || String(p.city_id) === city) &&
+      (!category || String(p.category_id) === category);
+  });
+
+  if(!filtered.length){
+    container.innerHTML = "<p class='small'>لا توجد خدمات مطابقة حالياً. يمكنك العودة لاحقاً.</p>";
+    return;
+  }
+
+  filtered.forEach(p=>{
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const title = document.createElement("h3");
+    title.textContent = p.business_name || "مقدم خدمة";
+
+    const description = document.createElement("p");
+    description.textContent = p.description || "";
+
+    const cityTag = document.createElement("span");
+    cityTag.className = "tag";
+    cityTag.textContent = p.city_name || "";
+
+    const categoryTag = document.createElement("span");
+    categoryTag.className = "tag";
+    categoryTag.textContent = p.category_name || "";
+
+    card.append(title,description,cityTag,categoryTag);
+    container.appendChild(card);
+  });
+
+  statusBox.textContent = `عدد الخدمات المعروضة: ${filtered.length}`;
+}
+
+async function signUp(){
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  if(!email || password.length < 6){
+    alert("أدخل بريداً إلكترونياً صحيحاً وكلمة مرور من 6 أحرف على الأقل.");
+    return;
+  }
+
+  const {data,error} = await db.auth.signUp({email,password});
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  if(data.session){
+    alert("تم إنشاء الحساب بنجاح!");
+  }else{
+    alert("تم إنشاء الحساب. تحقق من بريدك الإلكتروني لتأكيده، ثم سجّل الدخول.");
+  }
+}
+
+async function signIn(){
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  const {error} = await db.auth.signInWithPassword({email,password});
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  alert("تم تسجيل الدخول بنجاح!");
+  updateAccount();
+}
+
+async function signOut(){
+  await db.auth.signOut();
+  updateAccount();
+}
+
+async function updateAccount(){
+  const {data} = await db.auth.getUser();
+  const user = data.user;
+
+  document.getElementById("authArea").classList.toggle("hidden",!!user);
+  document.getElementById("logout").classList.toggle("hidden",!user);
+  document.getElementById("adArea").classList.toggle("hidden",!user);
+
+  document.getElementById("accountStatus").textContent =
+    user ? "تم تسجيل الدخول: " + user.email : "لم تسجل الدخول بعد.";
+}
+
+async function addProvider(){
+  const {data,error:userError} = await db.auth.getUser();
+
+  if(userError || !data.user){
+    alert("يرجى تسجيل الدخول أولاً.");
+    return;
+  }
+
+  const business_name = document.getElementById("businessName").value.trim();
+  const description = document.getElementById("description").value.trim();
+  const city_id = document.getElementById("adCity").value;
+  const category_id = document.getElementById("adCategory").value;
+  const phone = document.getElementById("phone").value.trim();
+  const address = document.getElementById("address").value.trim();
+
+  if(!business_name || !description || !city_id || !category_id || !phone){
+    alert("يرجى تعبئة الحقول المطلوبة.");
+    return;
+  }
+
+  const {error} = await db.from("providers").insert({
+    user_id:data.user.id,
+    business_name,
+    description,
+    city_id,
+    category_id,
+    phone,
+    address,
+    is_active:true
+  });
+
+  if(error){
+    alert("تعذر نشر الإعلان: " + error.message);
+    return;
+  }
+
+  alert("تم إرسال إعلانك بنجاح!");
+  document.getElementById("businessName").value = "";
+  document.getElementById("description").value = "";
+  document.getElementById("phone").value = "";
+  document.getElementById("address").value = "";
+
+  await loadServices();
+}
+
+document.getElementById("search").addEventListener("input",renderServices);
+document.getElementById("cityFilter").addEventListener("change",renderServices);
+document.getElementById("categoryFilter").addEventListener("change",renderServices);
+
+db.auth.onAuthStateChange(()=>updateAccount());
+
+async function start(){
+  await loadOptions();
+  await loadServices();
+  await updateAccount();
+}
+
+start();
+
+if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>{
+    navigator.serviceWorker.register("./sw.js");
+  });
 }
 </script>
 
