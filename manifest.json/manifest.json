@@ -1,0 +1,12 @@
+{
+  "name": "وصلة - خدمات سوريا",
+  "short_name": "وصلة",
+  "description": "منصة وصلة للخدمات والمهن في سوريا",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#6c3ce9",
+  "lang": "ar",
+  "dir": "rtl"
+}
