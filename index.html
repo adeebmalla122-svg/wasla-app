@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#6541a5">
+<title>وصلة | خدمات سوريا</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:#f7f5fb;
+ color:#292333;
+}
+header{
+ background:linear-gradient(135deg,#493078,#8056bd);
+ color:white;
+ padding:28px 20px 35px;
+ border-radius:0 0 28px 28px;
+}
+.logo{font-size:30px;font-weight:bold}
+.tagline{font-size:14px;margin-top:7px}
+.search{
+ margin-top:24px;
+ display:flex;
+ background:white;
+ border-radius:13px;
+ padding:5px;
+}
+.search input{
+ flex:1;
+ border:0;
+ outline:0;
+ padding:12px;
+ font-size:15px;
+ min-width:0;
+}
+.search button{
+ border:0;
+ background:#f0c85a;
+ border-radius:10px;
+ padding:10px 17px;
+ font-weight:bold;
+}
+.container{padding:20px}
+h3{margin:12px 0 15px}
+.cities{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:12px;
+}
+.city{
+ background:white;
+ border:2px solid transparent;
+ border-radius:15px;
+ padding:17px;
+ text-align:center;
+ font-size:17px;
+ font-weight:bold;
+ cursor:pointer;
+ box-shadow:0 3px 12px #ddd5e8;
+}
+.city.active{border-color:#7950b2;color:#68429d}
+.categories{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:11px;
+}
+.category{
+ background:white;
+ padding:17px 5px;
+ text-align:center;
+ border-radius:14px;
+ cursor:pointer;
+ box-shadow:0 3px 10px #e8e3ef;
+ font-size:14px;
+}
+.category span{display:block;font-size:25px;margin-bottom:8px}
+.category.active{background:#eee5fa;border:1px solid #8056bd}
+.card{
+ background:white;
+ border-radius:16px;
+ padding:16px;
+ margin-bottom:12px;
+ box-shadow:0 3px 12px #e7e1ed;
+}
+.card h4{margin:0 0 9px;font-size:17px}
+.card p{color:#777;margin:6px 0;font-size:14px}
+.badge{color:#69429f;font-size:13px}
+.contact{
+ display:inline-block;
+ margin-top:10px;
+ background:#69429f;
+ color:white;
+ padding:10px 18px;
+ border-radius:10px;
+ text-decoration:none;
+}
+.bottom{
+ position:sticky;
+ bottom:0;
+ background:white;
+ display:flex;
+ justify-content:space-around;
+ padding:13px 5px;
+ box-shadow:0 -3px 12px #ddd;
+}
+.bottom button{
+ border:0;
+ background:none;
+ color:#69429f;
+ font-size:13px;
+ cursor:pointer;
+}
+.empty{text-align:center;color:#888;padding:25px}
+</style>
+</head>
+
+<body>
+
+<header>
+ <div class="logo">💜 وصلة</div>
+ <div class="tagline">كل الخدمات والمهن... أقرب إليك</div>
+
+ <div class="search">
+  <input id="searchInput" placeholder="شو الخدمة اللي عم تدور عليها؟">
+  <button onclick="render()">بحث</button>
+ </div>
+</header>
+
+<main class="container">
+
+ <h3>📍 اختر مدينتك</h3>
+ <div class="cities">
+  <div class="city active" onclick="chooseCity('حماة',this)">🏙️ حماة</div>
+  <div class="city" onclick="chooseCity('حمص',this)">🏙️ حمص</div>
+ </div>
+
+ <h3>🔎 تصفح الخدمات</h3>
+ <div class="categories" id="categories"></div>
+
+ <h3>⭐ مقدمو الخدمات</h3>
+ <div id="results"></div>
+
+</main>
+
+<nav class="bottom">
+ <button onclick="window.scrollTo(0,0)">🏠 الرئيسية</button>
+ <button onclick="alert('قريباً: تسجيل الحساب وإضافة إعلان')">➕ أضف إعلانك</button>
+ <button onclick="alert('قريباً: حسابك الشخصي')">👤 حسابي</button>
+</nav>
+
+<script>
+let city='حماة';
+let category='الكل';
+
+const services=[
+ ['🔌','كهرباء','حماة'],
+ ['🚰','سباكة','حماة'],
+ ['🪚','نجارة','حماة'],
+ ['🔨','حدادة','حمص'],
+ ['🪟','ألمنيوم','حمص'],
+ ['🏠','صيانة منازل','حمص'],
+ ['🚗','نقل وتوصيل','حماة'],
+ ['📚','دروس خصوصية','حمص'],
+ ['🧹','تنظيف','حماة']
+];
+
+function drawCategories(){
+ const box=document.getElementById('categories');
+ box.innerHTML='';
+ [['الكل','🌟'],...services.map(s=>[s[1],s[0]])]
+ .forEach(item=>{
+  const el=document.createElement('div');
+  el.className='category'+(category===item[0]?' active':'');
+  el.innerHTML='<span>'+item[1]+'</span>'+item[0];
+  el.onclick=()=>{
+   category=item[0];
+   drawCategories();
+   render();
+  };
+  box.appendChild(el);
+ });
+}
+
+function chooseCity(name,el){
+ city=name;
+ document.querySelectorAll('.city').forEach(x=>x.classList.remove('active'));
+ el.classList.add('active');
+ render();
+}
+
+function render(){
+ const term=document.getElementById('searchInput').value.trim();
+ const box=document.getElementById('results');
+ const filtered=services.filter(s=>
+  s[2]===city &&
+  (category==='الكل'||s[1]===category) &&
+  (!term||s[1].includes(term))
+ );
+
+ box.innerHTML='';
+ if(!filtered.length){
+  box.innerHTML='<div class="empty">ما لقينا خدمات مطابقة حالياً.</div>';
+  return;
+ }
+
+ filtered.forEach(s=>{
+  const card=document.createElement('div');
+  card.className='card';
+  const title=document.createElement('h4');
+  title.textContent=s[0]+' '+s[1];
+  const desc=document.createElement('p');
+  desc.textContent='خدمة متاحة في '+s[2];
+  const badge=document.createElement('div');
+  badge.className='badge';
+  badge.textContent='إعلان تجريبي';
+  card.append(title,desc,badge);
+  box.appendChild(card);
+ });
+}
+
+drawCategories();
+render();
+</script>
+
+</body>
+</html>
