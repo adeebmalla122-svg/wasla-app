@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#6541a5">
+<meta name="description" content="وصلة - منصة الخدمات والمهن في سوريا">
+<link rel="manifest" href="./manifest.json">
 <title>وصلة | خدمات سوريا</title>
 
 <style>
@@ -224,6 +226,16 @@ function render(){
 
 drawCategories();
 render();
+</script>
+
+<script>
+if ("serviceWorker" in navigator) {
+ window.addEventListener("load", () => {
+  navigator.serviceWorker.register("./sw.js")
+   .then(() => console.log("وصلة جاهزة للعمل"))
+   .catch(error => console.log("خطأ في التسجيل:", error));
+ });
+}
 </script>
 
 </body>
